@@ -8,7 +8,7 @@
     <DockPanel Margin="10">
         <WrapPanel DockPanel.Dock="Bottom">
             <Button Command="{Binding RefreshCommand}" >Refresh</Button>
-            <CheckBox Command="{Binding RefreshCommand}" Margin="10 3, 0, 0">Enable auto refresh</CheckBox>
+            <CheckBox Command="{Binding AutoRefreshCommand}" Margin="10 3, 0, 0">Enable auto refresh</CheckBox>
             <TextBlock Margin="10, 2, 5, 0">Interval:</TextBlock>
             <TextBox Width="25" Text="{Binding IntervalValue}" />
             <Button DockPanel.Dock="Bottom" Command="{Binding KillCommand}" Margin="5, 0, 5, 0">Kill</Button>
@@ -32,12 +32,13 @@
                 <TextBlock Margin="0, 0, 5, 0">Filter by priority:</TextBlock>
                 <TextBox MinWidth="150" Text="{Binding PriorityFilter}" />
             </WrapPanel>
-            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding ProcessesDataGrid}" Margin="0, 0, 0, 0">
+            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Processes}" MaxHeight="250" Margin="0, 0, 0, 0" ScrollViewer.CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding ProcessNameColumn}" />
-                    <DataGridTextColumn Header="CPU Usage" Binding="{Binding ProcessCPUUsageColumn}" />
-                    <DataGridTextColumn Header="Memory" Binding="{Binding ProcessMemoryUsageColumn}" />
-                    <DataGridTextColumn Header="Priority" Binding="{Binding ProcessPriorityColumn}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                    <DataGridTextColumn Header="Process ID" Binding="{Binding PID}" />
+                    <DataGridTextColumn Header="CPU Usage" Binding="{Binding CPUUsage}" />
+                    <DataGridTextColumn Header="Memory" Binding="{Binding MemoryUsage}" />
+                    <DataGridTextColumn Header="Priority" Binding="{Binding Priority}" />
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>

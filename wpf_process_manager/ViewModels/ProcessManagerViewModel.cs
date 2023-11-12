@@ -14,6 +14,7 @@ namespace wpf_process_manager.ViewModels
     {
         private ProcessManager.ProcessManager _processManager;
         public ObservableCollection<ProcessPriorityModel> ProcessPriorities { get; set; }
+        public ObservableCollection<ProcessModel> Processes { get; set; }
         private int _intervalValue;
 
         public int IntervalValue
@@ -26,6 +27,7 @@ namespace wpf_process_manager.ViewModels
             }
         }
 
+        public Command<object> RefreshCommand { get; private set; }
         public Command<object> AutoRefreshCommand { get; private set; }
         public Command<object> KillCommand { get; private set; }
         public Command<object> SetPriorityCommand { get; private set; }
@@ -35,6 +37,7 @@ namespace wpf_process_manager.ViewModels
         {
             _processManager = new ProcessManager.ProcessManager();
             ProcessPriorities = new ObservableCollection<ProcessPriorityModel>();
+            Processes = new ObservableCollection<ProcessModel>(_processManager.Refresh());
             foreach (var priority in Enum.GetValues(typeof(ProcessPriorityClass)))
             {
                 ProcessPriorities.Add(new ProcessPriorityModel((ProcessPriorityClass)priority));
@@ -48,7 +51,14 @@ namespace wpf_process_manager.ViewModels
                 _ => Kill(),
                 _ => ReturnTrue()
             );
-
+            SetPriorityCommand = new Command<object>(
+                _ => SetPriority(),
+                _ => ReturnTrue()
+            );
+            RefreshCommand = new Command<object>(
+                _ => Refresh(),
+                _ => ReturnTrue()
+            );
         }
 
         private bool ReturnTrue()
@@ -57,6 +67,11 @@ namespace wpf_process_manager.ViewModels
         }
 
         /* Commands */
+        private void Refresh()
+        {
+            Processes = new ObservableCollection<ProcessModel>(_processManager.Refresh());
+            //OnPropertyChanged();
+        }
         private void Kill()
         {
             //_processManager.KillProcess()
@@ -64,6 +79,11 @@ namespace wpf_process_manager.ViewModels
         private void AutoRefresh()
         {
             _processManager.AutoRefresh();
+        }
+
+        private void SetPriority()
+        {
+
         }
     }
 }

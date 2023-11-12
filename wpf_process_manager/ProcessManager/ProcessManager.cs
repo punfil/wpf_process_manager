@@ -39,7 +39,7 @@ namespace wpf_process_manager.ProcessManager
 
         public bool KillProcess(int pid)
         {
-            var process = this._processes.Find(x => x.GetPID() == pid);
+            var process = this._processes.Find(x => x.PID == pid);
             if (process != null && process.HasFinished())
             {//TODO: Remove from list?
                 return process.Kill();
@@ -67,7 +67,7 @@ namespace wpf_process_manager.ProcessManager
             // Update processes that already exist in the list
             foreach (Process process in processes)
             {
-                var proc = _processes.Find(x => x.GetPID() == process.Id);
+                var proc = _processes.Find(x => x.PID == process.Id);
                 if (proc == null)
                 {
                     _processes.Add(new ProcessModel(process));
