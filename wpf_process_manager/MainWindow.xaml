@@ -7,8 +7,8 @@
         Title="184657 - Panfil Wojciech - Menedżer procesów" Height="450" Width="800">
     <DockPanel Margin="10">
         <WrapPanel DockPanel.Dock="Bottom">
-            <Button Name="Refresh" >Refresh</Button>
-            <CheckBox Command="{Binding AutoFreshCommand}" Margin="10 3, 0, 0">Enable auto refresh</CheckBox>
+            <Button Command="{Binding RefreshCommand}" >Refresh</Button>
+            <CheckBox Command="{Binding RefreshCommand}" Margin="10 3, 0, 0">Enable auto refresh</CheckBox>
             <TextBlock Margin="10, 2, 5, 0">Interval:</TextBlock>
             <TextBox Width="25" Text="{Binding IntervalValue}" />
             <Button DockPanel.Dock="Bottom" Command="{Binding KillCommand}" Margin="5, 0, 5, 0">Kill</Button>

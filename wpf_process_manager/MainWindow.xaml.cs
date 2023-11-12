@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,17 +13,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using wpf_process_manager.ViewModels;
 
 namespace wpf_process_manager
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        private ProcessManagerViewModel _viewModel;
         public MainWindow()
         {
             InitializeComponent();
+
+            _viewModel = new ProcessManagerViewModel();
+
+            DataContext = _viewModel;
         }
     }
 }
