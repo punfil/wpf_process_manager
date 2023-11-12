@@ -21,13 +21,13 @@ namespace wpf_process_manager.ProcessManager
             _refreshTimer.Tick += AutoRefresh;
         }
 
-        public Process[] GetRunningProcesses()
+        private Process[] GetRunningProcesses()
         {
             return Process.GetProcesses();
 
         }
 
-        private void OnRequestTickData()
+        public void OnRequestTickData()
         {
             // TODO: return values
         }
@@ -35,6 +35,28 @@ namespace wpf_process_manager.ProcessManager
         private void AutoRefresh(object sender, EventArgs e)
         {
             Refresh();
+        }
+
+        public bool KillProcess(int pid)
+        {
+            var process = this._processes.Find(x => x.GetPID() == pid);
+            if (process != null && process.HasFinished())
+            {//TODO: Remove from list?
+                return process.Kill();
+            }
+            return false;
+        }
+
+        public void AutoRefresh()
+        {
+            if (!_refreshTimer.IsEnabled)
+            {
+                _refreshTimer.Start();
+            }
+            else
+            {
+                _refreshTimer.Stop();
+            }
         }
 
         public List<ProcessModel> Refresh()

@@ -56,6 +56,20 @@ namespace wpf_process_manager.Models
             return _process.HasExited;
         }
 
+        public bool Kill()
+        {
+            try
+            {
+                _process.Kill();
+            }
+            catch (Exception exc)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public void Refresh()
         {
             this._process.Refresh();
