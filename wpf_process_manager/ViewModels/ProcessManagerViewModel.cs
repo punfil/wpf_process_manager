@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
@@ -40,10 +41,16 @@ namespace wpf_process_manager.ViewModels
         public Command<object> KillCommand { get; private set; }
         public Command<object> SetPriorityCommand { get; private set; }
 
-
         public ProcessManagerViewModel()
         {
             _processManager = new ProcessManager.ProcessManager();
+            _processManager.RefreshTimerHandler += (sender, args) =>
+            {
+                if (args is AutoRefreshReturn refreshReturn)
+                {
+                    Processes = new ObservableCollection<ProcessModel>(refreshReturn.processesList);
+                }
+            };
             ProcessPriorities = new ObservableCollection<ProcessPriorityModel>();
             Processes = new ObservableCollection<ProcessModel>(_processManager.Refresh());
             foreach (var priority in Enum.GetValues(typeof(ProcessPriorityClass)))

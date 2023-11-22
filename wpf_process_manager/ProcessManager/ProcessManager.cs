@@ -3,38 +3,38 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using wpf_process_manager.Models;
 
 namespace wpf_process_manager.ProcessManager
 {
+    public class AutoRefreshReturn : EventArgs
+    {
+        public List<ProcessModel> processesList { get; set; }
+
+        public AutoRefreshReturn(List<ProcessModel> processList)
+        {
+            this.processesList = processList;
+        }
+    }
+
     public class ProcessManager
     {
         private List<ProcessModel> _processes;
-        private DispatcherTimer _refreshTimer;
+        private Timer _refreshTimer;
+        public event EventHandler RefreshTimerHandler;
         public ProcessManager()
         {
             _processes = new List<ProcessModel>();
-            _refreshTimer = new DispatcherTimer();
-            _refreshTimer.Interval = TimeSpan.FromSeconds(3); // TODO
-            _refreshTimer.Tick += AutoRefresh;
+            _refreshTimer = null;
         }
 
         private Process[] GetRunningProcesses()
         {
             return Process.GetProcesses();
 
-        }
-
-        public void OnRequestTickData()
-        {
-            // TODO: return values
-        }
-
-        private void AutoRefresh(object sender, EventArgs e)
-        {
-            Refresh();
         }
 
         public bool KillProcess(int pid)
@@ -47,16 +47,28 @@ namespace wpf_process_manager.ProcessManager
             return false;
         }
 
+        private void OnRequestTickData(List<ProcessModel> processModels)
+        {
+            var ret = new AutoRefreshReturn(processModels);
+            RefreshTimerHandler?.Invoke(this, ret);
+        }
+
         public void AutoRefresh()
         {
-            if (!_refreshTimer.IsEnabled)
+            if (_refreshTimer == null)
             {
-                _refreshTimer.Start();
+                _refreshTimer = new Timer(TimerCallback, null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
             }
             else
             {
-                _refreshTimer.Stop();
+                _refreshTimer.Dispose();
+                _refreshTimer = null;
             }
+        }
+
+        private void TimerCallback(object state)
+        {
+            Refresh();
         }
 
         public List<ProcessModel> Refresh()
@@ -83,9 +95,9 @@ namespace wpf_process_manager.ProcessManager
                 _processes.RemoveAll(p => p.PID == id);
             });
 
-            if (_refreshTimer.IsEnabled)
+            if (this._refreshTimer != null)
             {
-                OnRequestTickData();
+                OnRequestTickData(_processes);
             }
 
             return this._processes;
