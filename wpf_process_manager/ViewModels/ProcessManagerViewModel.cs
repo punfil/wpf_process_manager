@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -14,7 +16,18 @@ namespace wpf_process_manager.ViewModels
     {
         private ProcessManager.ProcessManager _processManager;
         public ObservableCollection<ProcessPriorityModel> ProcessPriorities { get; set; }
-        public ObservableCollection<ProcessModel> Processes { get; set; }
+
+        private ObservableCollection<ProcessModel> _processes;
+        public ObservableCollection<ProcessModel> Processes
+        {
+            get { return _processes; }
+            set
+            {
+                _processes = value;
+                OnPropertyChanged();
+            }
+        }
+
         private int _intervalValue;
 
         public int IntervalValue
@@ -70,11 +83,11 @@ namespace wpf_process_manager.ViewModels
         private void Refresh()
         {
             Processes = new ObservableCollection<ProcessModel>(_processManager.Refresh());
-            //OnPropertyChanged();
         }
+
         private void Kill()
         {
-            //_processManager.KillProcess()
+            //_processManager.KillProcess();
         }
         private void AutoRefresh()
         {

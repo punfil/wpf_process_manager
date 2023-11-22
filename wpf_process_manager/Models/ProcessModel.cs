@@ -48,6 +48,7 @@ namespace wpf_process_manager.Models
         public void Refresh()
         {
             _process.Refresh();
+            this.UpdateDataFields();
         }
 
         private void UpdateDataFields()
@@ -72,10 +73,6 @@ namespace wpf_process_manager.Models
             }
         }
 
-        /// <summary>
-        /// Get Memory Usage of the process
-        /// </summary>
-        /// <returns> Memory usage in megabytes. </returns>
         private string GetMemoryUsage()
         {
             try

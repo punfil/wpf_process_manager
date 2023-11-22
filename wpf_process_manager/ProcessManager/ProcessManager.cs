@@ -61,22 +61,27 @@ namespace wpf_process_manager.ProcessManager
 
         public List<ProcessModel> Refresh()
         {
-            var finishedProcesses = _processes.RemoveAll(x => x.HasFinished() == true);
-            Process[] processes = GetRunningProcesses();
-
+            var currentIds = new HashSet<int>(_processes.Select(p => p.PID));
             // Update processes that already exist in the list
-            foreach (Process process in processes)
+            Parallel.ForEach(Process.GetProcesses(), p =>
             {
-                var proc = _processes.Find(x => x.PID == process.Id);
-                if (proc == null)
+                if (!currentIds.Remove(p.Id))
                 {
-                    _processes.Add(new ProcessModel(process));
+                    _processes.Add(new ProcessModel(p));
                 }
                 else
                 {
-                    proc.Refresh();
+                    Parallel.ForEach(_processes.FindAll(x => x.PID == p.Id), proc =>
+                    {
+                        proc.Refresh();
+                    });
                 }
-            }
+            });
+
+            Parallel.ForEach(currentIds, id =>
+            {
+                _processes.RemoveAll(p => p.PID == id);
+            });
 
             if (_refreshTimer.IsEnabled)
             {
