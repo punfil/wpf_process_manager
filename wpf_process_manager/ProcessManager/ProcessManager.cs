@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Automation;
 using System.Windows.Threading;
 using wpf_process_manager.Models;
 
@@ -45,6 +46,107 @@ namespace wpf_process_manager.ProcessManager
                 return process.Kill();
             }
             return false;
+        }
+
+        static bool CompareWithPredicate(double value1, double value2, string predicate)
+        {
+            switch (predicate)
+            {
+                case "<=":
+                    return value1 <= value2;
+                case "<":
+                    return value1 < value2;
+                case ">=":
+                    return value1 >= value2;
+                case ">":
+                    return value1 > value2;
+                case "==":
+                    return value1 == value2;
+                default:
+                    throw new ArgumentException("Invalid predicate");
+            }
+        }
+
+        private void RemoveAllFrom_processes(List<ProcessModel> toBeRemoved)
+        {
+            foreach (ProcessModel remove in toBeRemoved)
+            {
+                _processes.Remove(remove);
+            }
+
+            toBeRemoved.Clear();
+        }
+
+        public List<ProcessModel> FilterProcesses(string nameFilter, string cpuUsageFilter, string memoryUsageFilter, string priorityFilter)
+        {
+            List<ProcessModel> toBeRemoved = new List<ProcessModel>();
+            if (nameFilter != null && nameFilter != "")
+            {
+                foreach (ProcessModel process in _processes)
+                {
+                    if (!process.Name.Contains(nameFilter))
+                    {
+                        toBeRemoved.Add(process);
+                    }
+                }
+            }
+            RemoveAllFrom_processes(toBeRemoved);
+
+            if (cpuUsageFilter != null && cpuUsageFilter != "")
+            {
+                var cpuFilters = cpuUsageFilter.Split(' ');
+                if (cpuFilters.Length < 2)
+                {
+                    return _processes;
+                }
+
+                var predicate = cpuFilters[0];
+                var filterValue = double.Parse(cpuFilters[1]);
+                foreach (ProcessModel process in _processes)
+                {
+                    // Remove " %"
+                    if (!CompareWithPredicate(double.Parse(process.CPUUsage.Remove(process.CPUUsage.Length-2)), filterValue, predicate))
+                    {
+                        toBeRemoved.Add(process);
+                    }
+                }
+            }
+            RemoveAllFrom_processes(toBeRemoved);
+
+            if (memoryUsageFilter != null && memoryUsageFilter != "")
+            {
+                var memoryFilters = memoryUsageFilter.Split(' ');
+                if (memoryFilters.Length < 2)
+                {
+                    return _processes;
+                }
+
+                var predicate = memoryFilters[0];
+                var filterValue = double.Parse(memoryFilters[1]);
+                foreach (ProcessModel process in _processes)
+                {
+                    // Remove " MB"
+                    if (!CompareWithPredicate(double.Parse(process.MemoryUsage.Remove(process.MemoryUsage.Length-3)), filterValue, predicate))
+                    {
+                        toBeRemoved.Add(process);
+                    }
+                }
+            }
+            RemoveAllFrom_processes(toBeRemoved);
+
+            if (priorityFilter != null && priorityFilter != "")
+            {
+                foreach (ProcessModel process in _processes)
+                {
+                    if (process.Priority == priorityFilter)
+                    {
+                        toBeRemoved.Add(process);
+                    }
+                }
+            }
+            RemoveAllFrom_processes(toBeRemoved);
+
+            return _processes;
         }
 
         private void OnRequestTickData(List<ProcessModel> processModels)

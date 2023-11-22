@@ -12,7 +12,7 @@ namespace wpf_process_manager.ViewModels
     public class ProcessManagerViewModel : NotifyPropertyChanged
     {
         private ProcessPriorityModel selectedProcessPriorityModel = null;
-        private ProcessManager.ProcessManager _processManager;
+        private readonly ProcessManager.ProcessManager _processManager;
         public ObservableCollection<ProcessPriorityModel> ProcessPriorities { get; set; }
 
         private ObservableCollection<ProcessModel> _processes;
@@ -34,6 +34,7 @@ namespace wpf_process_manager.ViewModels
             set
             {
                 _intervalValue = value;
+                OnPropertyChanged();
             }
         }
 
@@ -45,6 +46,7 @@ namespace wpf_process_manager.ViewModels
             set
             {
                 _nameFilter = value;
+                OnPropertyChanged();
             }
         }
 
@@ -56,6 +58,7 @@ namespace wpf_process_manager.ViewModels
             set
             {
                 _cpuUsageFilter = value;
+                OnPropertyChanged();
             }
         }
 
@@ -67,6 +70,7 @@ namespace wpf_process_manager.ViewModels
             set
             {
                 _memoryUsageFilter = value;
+                OnPropertyChanged();
             }
         }
 
@@ -78,6 +82,7 @@ namespace wpf_process_manager.ViewModels
             set
             {
                 _priorityFilter = value;
+                OnPropertyChanged();
             }
         }
 
@@ -89,6 +94,7 @@ namespace wpf_process_manager.ViewModels
             set
             {
                 _selectedProcessPriority = value;
+                OnPropertyChanged();
             }
         }
 
@@ -96,6 +102,7 @@ namespace wpf_process_manager.ViewModels
         public Command<object> AutoRefreshCommand { get; private set; }
         public Command<object> KillCommand { get; private set; }
         public Command<object> SetPriorityCommand { get; private set; }
+        public Command<object> FilterProcessesCommand { get; private set; }
 
         public ProcessManagerViewModel()
         {
@@ -105,6 +112,7 @@ namespace wpf_process_manager.ViewModels
                 if (args is AutoRefreshReturn refreshReturn)
                 {
                     Processes = new ObservableCollection<ProcessModel>(refreshReturn.processesList);
+                    ClearFilters();
                 }
             };
             ProcessPriorities = new ObservableCollection<ProcessPriorityModel>();
@@ -130,6 +138,10 @@ namespace wpf_process_manager.ViewModels
                 _ => Refresh(),
                 _ => ReturnTrue()
             );
+            FilterProcessesCommand = new Command<object>(
+                _ => FilterProcesses(),
+                _ => ReturnTrue()
+            );
         }
 
         private bool ReturnTrue()
@@ -140,13 +152,28 @@ namespace wpf_process_manager.ViewModels
         /* Commands */
         private void Refresh()
         {
-            var thread = new Thread(() => RefreshThreadWrapper());
+            var thread = new Thread(RefreshThreadWrapper);
             thread.Start();
         }
 
         private void RefreshThreadWrapper()
         {
             Processes = new ObservableCollection<ProcessModel>(_processManager.Refresh());
+            ClearFilters();
+        }
+
+        private void FilterProcesses()
+        {
+            Processes = new ObservableCollection<ProcessModel>(
+                _processManager.FilterProcesses(NameFilter, CpuUsageFilter, MemoryUsageFilter, PriorityFilter));
+        }
+
+        private void ClearFilters()
+        {
+            NameFilter = "";
+            CpuUsageFilter = "";
+            MemoryUsageFilter = "";
+            PriorityFilter = "";
         }
 
         private void Kill()
