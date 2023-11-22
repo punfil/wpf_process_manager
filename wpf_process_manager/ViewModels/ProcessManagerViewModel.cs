@@ -10,6 +10,7 @@ namespace wpf_process_manager.ViewModels
 {
     public class ProcessManagerViewModel : NotifyPropertyChanged
     {
+        private ProcessPriorityModel selectedProcessPriorityModel = null;
         private ProcessManager.ProcessManager _processManager;
         public ObservableCollection<ProcessPriorityModel> ProcessPriorities { get; set; }
 
@@ -33,6 +34,17 @@ namespace wpf_process_manager.ViewModels
             {
                 _intervalValue = value;
                 OnPropertyChanged();
+            }
+        }
+
+        private ProcessPriorityModel _selectedProcessPriority;
+
+        public ProcessPriorityModel SelectedProcessPriority
+        {
+            get { return _selectedProcessPriority;  }
+            set
+            {
+                _selectedProcessPriority = value;
             }
         }
 

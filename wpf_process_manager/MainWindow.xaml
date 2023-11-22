@@ -13,7 +13,7 @@
             <TextBox Width="25" Text="{Binding IntervalValue}" />
             <Button DockPanel.Dock="Bottom" Command="{Binding KillCommand}" Margin="5, 0, 5, 0">Kill</Button>
             <Button DockPanel.Dock="Bottom" Command="{Binding SetPriorityCommand}" Margin="0, 0, 5, 0">Set priority</Button>
-            <ComboBox DockPanel.Dock="Bottom" ItemsSource="{Binding ProcessPriorities}" SelectedItem="{Binding PrioritySelected}" DisplayMemberPath="Name"/>
+            <ComboBox DockPanel.Dock="Bottom" ItemsSource="{Binding ProcessPriorities}" SelectedItem="{Binding SelectedProcessPriority}" DisplayMemberPath="Name"/>
         </WrapPanel>
         <StackPanel Orientation="Vertical" Margin="10">
             <WrapPanel Margin="0, 0, 0, 5">
