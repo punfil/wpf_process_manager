@@ -11,7 +11,6 @@ namespace wpf_process_manager.ViewModels
 {
     public class ProcessManagerViewModel : NotifyPropertyChanged
     {
-        private ProcessPriorityModel selectedProcessPriorityModel = null;
         private readonly ProcessManager.ProcessManager _processManager;
         public ObservableCollection<ProcessPriorityModel> ProcessPriorities { get; set; }
 
@@ -133,6 +132,8 @@ namespace wpf_process_manager.ViewModels
             {
                 ProcessPriorities.Add(new ProcessPriorityModel((ProcessPriorityClass)priority));
             }
+            // Show sth by default
+            SelectedProcessPriority = ProcessPriorities[0];
 
             AutoRefreshCommand = new Command<object>(
                 _ => AutoRefresh(),
