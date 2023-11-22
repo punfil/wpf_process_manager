@@ -98,6 +98,18 @@ namespace wpf_process_manager.ViewModels
             }
         }
 
+        private ProcessModel _selectedProcess;
+
+        public ProcessModel SelectedProcess
+        {
+            get => _selectedProcess;
+            set
+            {
+                _selectedProcess = value;
+                OnPropertyChanged();
+            }
+        }
+
         public Command<object> RefreshCommand { get; private set; }
         public Command<object> AutoRefreshCommand { get; private set; }
         public Command<object> KillCommand { get; private set; }
@@ -178,7 +190,12 @@ namespace wpf_process_manager.ViewModels
 
         private void Kill()
         {
-            //_processManager.KillProcess();
+            var retval = _processManager.KillProcess(SelectedProcess);
+            if (retval)
+            {
+                Refresh();
+                SelectedProcess = null;
+            }
         }
         private void AutoRefresh()
         {

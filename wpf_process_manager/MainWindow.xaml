@@ -33,7 +33,7 @@
                 <TextBox MinWidth="150" Text="{Binding PriorityFilter}" />
             </WrapPanel>
             <Button DockPanel.Dock="Bottom" Command="{Binding FilterProcessesCommand}" Margin="0, 0, 5, 0">Apply filters</Button>
-                <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Processes}" MaxHeight="250" Margin="0, 0, 0, 0" ScrollViewer.CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <DataGrid AutoGenerateColumns="False" SelectedItem="{Binding SelectedProcess, Mode=TwoWay}" ItemsSource="{Binding Processes}" MaxHeight="250" Margin="0, 0, 0, 0" ScrollViewer.CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
                     <DataGridTextColumn Header="Process ID" Binding="{Binding PID}" />

@@ -38,11 +38,10 @@ namespace wpf_process_manager.ProcessManager
 
         }
 
-        public bool KillProcess(int pid)
+        public bool KillProcess(ProcessModel process)
         {
-            var process = this._processes.Find(x => x.PID == pid);
-            if (process != null && process.HasFinished())
-            {//TODO: Remove from list?
+            if (process != null && !process.HasFinished())
+            {
                 return process.Kill();
             }
             return false;

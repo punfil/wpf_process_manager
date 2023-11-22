@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using wpf_process_manager.ProcessManager;
 
@@ -118,6 +119,9 @@ namespace wpf_process_manager.Models
                 return false;
             }
 
+            /* WA race condition between Refresh() and graceful app kill
+             * tested with Notepad.exe */
+            Thread.Sleep(500);
             return true;
         }
     }
