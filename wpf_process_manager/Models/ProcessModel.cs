@@ -53,12 +53,22 @@ namespace wpf_process_manager.Models
 
         private void UpdateDataFields()
         {
-            this.PID = _process.Id;
-            this.Name = _process.ProcessName;
-            this.Command = GetStartCommand();
-            this.CPUUsage = GetCPUUsage();
-            this.MemoryUsage = GetMemoryUsage();
-            this.Priority = GetPriority();
+            try
+            {
+                this.PID = _process.Id;
+                this.Name = _process.ProcessName;
+                this.Command = GetStartCommand();
+                this.CPUUsage = GetCPUUsage();
+                this.MemoryUsage = GetMemoryUsage();
+                this.Priority = GetPriority();
+            }
+            catch (Exception ex)
+            {
+                // Do nothing, because what to do?
+                // Exception can only happen if the process finished (race condition) and we want to get data from it
+                // It will be auto deleted during next Refresh() in ProcessManager
+                _process = null; // Only possible action
+            }
         }
 
         private string GetPriority()
