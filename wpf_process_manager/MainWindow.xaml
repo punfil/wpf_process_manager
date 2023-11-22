@@ -26,7 +26,7 @@
             </WrapPanel>
             <WrapPanel Margin="0, 0, 0, 5">
                 <TextBlock Margin="0, 0, 5, 0">Filter by memory usage:</TextBlock>
-                <TextBox MinWidth="150" Text="{Binding MemoryFilter}" />
+                <TextBox MinWidth="150" Text="{Binding MemoryUsageFilter}" />
             </WrapPanel>
             <WrapPanel>
                 <TextBlock Margin="0, 0, 5, 0">Filter by priority:</TextBlock>

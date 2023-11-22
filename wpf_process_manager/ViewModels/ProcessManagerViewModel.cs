@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
+using Microsoft.VisualBasic.CompilerServices;
 using wpf_process_manager.Models;
 using wpf_process_manager.ProcessManager;
 
@@ -17,7 +18,7 @@ namespace wpf_process_manager.ViewModels
         private ObservableCollection<ProcessModel> _processes;
         public ObservableCollection<ProcessModel> Processes
         {
-            get { return _processes; }
+            get => _processes;
             set
             {
                 _processes = value;
@@ -29,11 +30,54 @@ namespace wpf_process_manager.ViewModels
 
         public int IntervalValue
         {
-            get { return _intervalValue; }
+            get => _intervalValue;
             set
             {
                 _intervalValue = value;
-                OnPropertyChanged();
+            }
+        }
+
+        private string _nameFilter;
+
+        public string NameFilter
+        {
+            get => _nameFilter;
+            set
+            {
+                _nameFilter = value;
+            }
+        }
+
+        private string _cpuUsageFilter;
+
+        public string CpuUsageFilter
+        {
+            get => _cpuUsageFilter;
+            set
+            {
+                _cpuUsageFilter = value;
+            }
+        }
+
+        private string _memoryUsageFilter;
+
+        public string MemoryUsageFilter
+        {
+            get => _memoryUsageFilter;
+            set
+            {
+                _memoryUsageFilter = value;
+            }
+        }
+
+        private string _priorityFilter;
+
+        public string PriorityFilter
+        {
+            get => _priorityFilter;
+            set
+            {
+                _priorityFilter = value;
             }
         }
 
@@ -41,7 +85,7 @@ namespace wpf_process_manager.ViewModels
 
         public ProcessPriorityModel SelectedProcessPriority
         {
-            get { return _selectedProcessPriority;  }
+            get => _selectedProcessPriority;
             set
             {
                 _selectedProcessPriority = value;
