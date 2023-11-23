@@ -154,11 +154,13 @@ namespace wpf_process_manager.ProcessManager
             RefreshTimerHandler?.Invoke(this, ret);
         }
 
-        public void AutoRefresh()
+        public void AutoRefresh(int intervalValue)
         {
+            // Due to long time of Refresh() execution, interval value must be greater than 8 seconds.
+            int timerInterval = int.Max(8, intervalValue);
             if (_refreshTimer == null)
             {
-                _refreshTimer = new Timer(TimerCallback, null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
+                _refreshTimer = new Timer(TimerCallback, null, TimeSpan.FromSeconds(timerInterval), TimeSpan.FromSeconds(timerInterval));
             }
             else
             {

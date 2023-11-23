@@ -132,6 +132,7 @@ namespace wpf_process_manager.ViewModels
             {
                 ProcessPriorities.Add(new ProcessPriorityModel((ProcessPriorityClass)priority));
             }
+
             // Show sth by default
             SelectedProcessPriority = ProcessPriorities[0];
 
@@ -200,7 +201,7 @@ namespace wpf_process_manager.ViewModels
         }
         private void AutoRefresh()
         {
-            _processManager.AutoRefresh();
+            _processManager.AutoRefresh(IntervalValue);
         }
 
         private void SetPriority()
