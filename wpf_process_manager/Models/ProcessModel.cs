@@ -40,14 +40,16 @@ namespace wpf_process_manager.Models
         public Dictionary<string, string> GetDetails()
         {
             Dictionary<string, string> retDictionary = new Dictionary<string, string>();
+            List<int> processThreads = new List<int>();
 
             retDictionary["Name: "] = Name;
-            retDictionary["CPU Usage: "] = CPUUsage;
-            retDictionary["Memory usage: "] = MemoryUsage;
-            retDictionary["Priority: "] = Priority;
-            retDictionary["Threads count: "] = ThreadsCount;
-            retDictionary["Parent process ID: "] = ParentID.ToString();
+            retDictionary["Threads count: "] = GetThreadsCount();
             retDictionary["Handle count: "] = _process.HandleCount.ToString();
+            retDictionary["Threads: "] = "";
+            foreach (ProcessThread thread in _process.Threads)
+            {
+                retDictionary["Threads: "] += $"{thread.Id} ";
+            }
 
             return retDictionary;
         }
@@ -69,7 +71,7 @@ namespace wpf_process_manager.Models
         {
             var threadsCount = _process.Threads.Count;
 
-            return $"Threads count: {threadsCount}";
+            return $"{threadsCount}";
         }
 
         public void Refresh()
@@ -82,7 +84,7 @@ namespace wpf_process_manager.Models
         {
             try
             {
-                this.ThreadsCount = GetThreadsCount();
+                this.ThreadsCount = $"Threads count: {GetThreadsCount()}";
                 this.CPUUsage = GetCPUUsage();
                 this.MemoryUsage = GetMemoryUsage();
                 this.Priority = GetPriority();
