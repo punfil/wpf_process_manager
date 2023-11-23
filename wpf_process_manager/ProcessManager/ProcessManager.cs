@@ -151,7 +151,7 @@ namespace wpf_process_manager.ProcessManager
             {
                 foreach (ProcessModel process in filteredProcesses)
                 {
-                    if (process.Priority == priorityFilter)
+                    if (process.Priority != priorityFilter)
                     {
                         toBeRemoved.Add(process);
                     }
