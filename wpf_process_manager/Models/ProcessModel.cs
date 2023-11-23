@@ -160,10 +160,10 @@ namespace wpf_process_manager.Models
         }
     }
 }
+
 [StructLayout(LayoutKind.Sequential)]
 public struct ParentProcessUtilities
 {
-    // These members must match PROCESS_BASIC_INFORMATION
     internal IntPtr Reserved1;
     internal IntPtr PebBaseAddress;
     internal IntPtr Reserved2_0;
@@ -181,7 +181,6 @@ public struct ParentProcessUtilities
         int status = NtQueryInformationProcess(handle, 0, ref pbi, Marshal.SizeOf(pbi), out returnLength);
         if (status != 0)
             throw new Win32Exception(status);
-
         try
         {
             return pbi.InheritedFromUniqueProcessId.ToInt32();

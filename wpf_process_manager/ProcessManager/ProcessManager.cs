@@ -71,11 +71,11 @@ namespace wpf_process_manager.ProcessManager
             }
         }
 
-        private void RemoveAllFrom_processes(List<ProcessModel> toBeRemoved)
+        private void RemoveAllFrom_processes(List<ProcessModel> list, List<ProcessModel> toBeRemoved)
         {
             foreach (ProcessModel remove in toBeRemoved)
             {
-                _processes.Remove(remove);
+                list.Remove(remove);
             }
 
             toBeRemoved.Clear();
@@ -83,10 +83,12 @@ namespace wpf_process_manager.ProcessManager
 
         public List<ProcessModel> FilterProcesses(string nameFilter, string cpuUsageFilter, string memoryUsageFilter, string priorityFilter)
         {
+            List<ProcessModel> filteredProcesses = new List<ProcessModel>(_processes);
+            
             List<ProcessModel> toBeRemoved = new List<ProcessModel>();
             if (nameFilter != null && nameFilter != "")
             {
-                foreach (ProcessModel process in _processes)
+                foreach (ProcessModel process in filteredProcesses)
                 {
                     if (!process.Name.Contains(nameFilter))
                     {
@@ -94,19 +96,19 @@ namespace wpf_process_manager.ProcessManager
                     }
                 }
             }
-            RemoveAllFrom_processes(toBeRemoved);
+            RemoveAllFrom_processes(filteredProcesses, toBeRemoved);
 
             if (cpuUsageFilter != null && cpuUsageFilter != "")
             {
                 var cpuFilters = cpuUsageFilter.Split(' ');
                 if (cpuFilters.Length < 2)
                 {
-                    return _processes;
+                    return filteredProcesses;
                 }
 
                 var predicate = cpuFilters[0];
                 var filterValue = double.Parse(cpuFilters[1]);
-                foreach (ProcessModel process in _processes)
+                foreach (ProcessModel process in filteredProcesses)
                 {
                     // Remove " %"
                     if (!CompareWithPredicate(double.Parse(process.CPUUsage.Remove(process.CPUUsage.Length-2)), filterValue, predicate))
@@ -115,19 +117,19 @@ namespace wpf_process_manager.ProcessManager
                     }
                 }
             }
-            RemoveAllFrom_processes(toBeRemoved);
+            RemoveAllFrom_processes(filteredProcesses, toBeRemoved);
 
             if (memoryUsageFilter != null && memoryUsageFilter != "")
             {
                 var memoryFilters = memoryUsageFilter.Split(' ');
                 if (memoryFilters.Length < 2)
                 {
-                    return _processes;
+                    return filteredProcesses;
                 }
 
                 var predicate = memoryFilters[0];
                 var filterValue = double.Parse(memoryFilters[1]);
-                foreach (ProcessModel process in _processes)
+                foreach (ProcessModel process in filteredProcesses)
                 {
                     // Remove " MB"
                     if (!CompareWithPredicate(double.Parse(process.MemoryUsage.Remove(process.MemoryUsage.Length-3)), filterValue, predicate))
@@ -136,11 +138,11 @@ namespace wpf_process_manager.ProcessManager
                     }
                 }
             }
-            RemoveAllFrom_processes(toBeRemoved);
+            RemoveAllFrom_processes(filteredProcesses, toBeRemoved);
 
             if (priorityFilter != null && priorityFilter != "")
             {
-                foreach (ProcessModel process in _processes)
+                foreach (ProcessModel process in filteredProcesses)
                 {
                     if (process.Priority == priorityFilter)
                     {
@@ -148,9 +150,9 @@ namespace wpf_process_manager.ProcessManager
                     }
                 }
             }
-            RemoveAllFrom_processes(toBeRemoved);
+            RemoveAllFrom_processes(filteredProcesses, toBeRemoved);
 
-            return _processes;
+            return filteredProcesses;
         }
 
         private void OnRequestTickData(List<ProcessModel> processModels)
