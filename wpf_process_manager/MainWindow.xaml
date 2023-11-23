@@ -35,21 +35,23 @@
                         <TextBox MinWidth="150" Text="{Binding PriorityFilter}" />
                     </WrapPanel>
                 </StackPanel>
-                <ItemsControl Margin="10, 0, 0, 0" ItemsSource="{Binding SelectedProcessDetails}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding Key}"/>
-                                <TextBlock Text="{Binding Value}" Grid.Column="1"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
+                <StackPanel Orientation="Vertical">
+                    <ItemsControl Margin="10, 0, 0, 0" ItemsSource="{Binding SelectedProcessDetails}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Key}"/>
+                                    <TextBlock Text="{Binding Value}" Grid.Column="1"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ListBox Margin="10, 0, 0, 0" ItemsSource="{Binding SelectedProcessDetailsThreads}" MaxHeight="60" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                </StackPanel>
             </StackPanel>
             <Button DockPanel.Dock="Bottom" Command="{Binding FilterProcessesCommand}" Margin="0, 0, 5, 0">Apply filters</Button>
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding SelectedProcess, Mode=TwoWay}" ItemsSource="{Binding Processes}" MaxHeight="250" Margin="0, 0, 0, 0" ScrollViewer.CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">

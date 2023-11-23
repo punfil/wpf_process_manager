@@ -59,6 +59,16 @@ namespace wpf_process_manager.ProcessManager
             return null;
         }
 
+        public List<int> GetProcessThreadsDetails(ProcessModel process)
+        {
+            if (process != null)
+            {
+                return process.GetThreadsDetails();
+            }
+
+            return null;
+        }
+
         static bool CompareWithPredicate(double value1, double value2, string predicate)
         {
             switch (predicate)

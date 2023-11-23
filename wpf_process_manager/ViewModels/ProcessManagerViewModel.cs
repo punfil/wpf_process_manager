@@ -96,6 +96,18 @@ namespace wpf_process_manager.ViewModels
             }
         }
 
+        private ObservableCollection<int> _selectedProcessDetailsThreads;
+
+        public ObservableCollection<int> SelectedProcessDetailsThreads
+        {
+            get => _selectedProcessDetailsThreads;
+            set
+            {
+                _selectedProcessDetailsThreads = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ProcessPriorityModel _selectedProcessPriority;
 
         public ProcessPriorityModel SelectedProcessPriority
@@ -187,6 +199,7 @@ namespace wpf_process_manager.ViewModels
             Processes = new ObservableCollection<ProcessModel>(_processManager.Refresh());
             ClearFilters();
             SelectedProcessDetails = null;
+            SelectedProcessDetailsThreads = null;
         }
 
         private void FilterProcesses()
@@ -205,7 +218,11 @@ namespace wpf_process_manager.ViewModels
 
         private void ShowDetails()
         {
-            SelectedProcessDetails = _processManager.GetProcessDetails(SelectedProcess);
+            if (SelectedProcess != null)
+            {
+                SelectedProcessDetails = _processManager.GetProcessDetails(SelectedProcess);
+                SelectedProcessDetailsThreads = new ObservableCollection<int>(_processManager.GetProcessThreadsDetails(SelectedProcess));
+            }
         }
 
         private void Kill()

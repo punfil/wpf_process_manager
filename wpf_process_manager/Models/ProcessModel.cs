@@ -40,18 +40,25 @@ namespace wpf_process_manager.Models
         public Dictionary<string, string> GetDetails()
         {
             Dictionary<string, string> retDictionary = new Dictionary<string, string>();
-            List<int> processThreads = new List<int>();
+
 
             retDictionary["Name: "] = Name;
             retDictionary["Threads count: "] = GetThreadsCount();
             retDictionary["Handle count: "] = _process.HandleCount.ToString();
             retDictionary["Threads: "] = "";
-            foreach (ProcessThread thread in _process.Threads)
-            {
-                retDictionary["Threads: "] += $"{thread.Id} ";
-            }
 
             return retDictionary;
+        }
+
+        public List<int> GetThreadsDetails()
+        {
+            List<int> processThreads = new List<int>();
+            foreach (ProcessThread thread in _process.Threads)
+            {
+                processThreads.Add(thread.Id);
+            }
+
+            return processThreads;
         }
 
         public string GetCPUUsage()
