@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Automation;
-using System.Windows.Threading;
 using wpf_process_manager.Models;
 
 namespace wpf_process_manager.ProcessManager

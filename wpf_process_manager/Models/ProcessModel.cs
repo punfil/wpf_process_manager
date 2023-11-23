@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using System.Management;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
