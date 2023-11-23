@@ -15,10 +15,10 @@ namespace wpf_process_manager.Models
         private Process _process;
         public string Name { get; set; }
         public int PID { get; set; }
-        public string Command { get; set; }
         public string CPUUsage { get; set; }
         public string MemoryUsage { get; set; }
         public string Priority { get; set; }
+        public string ThreadsCount { get; set; }
 
         public ProcessModel(Process process)
         {
@@ -38,12 +38,11 @@ namespace wpf_process_manager.Models
             }
         }
 
-        public string GetStartCommand()
+        public string GetThreadsCount()
         {
-            //var startInfo = _process.GetType().GetField("startInfo", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(_process) as ProcessStartInfo;
+            var threadsCount = _process.Threads.Count;
 
-            //return startInfo?.FileName + " " + startInfo?.Arguments;
-            return "Unknown";
+            return $"Threads count: {threadsCount}";
         }
 
         public void Refresh()
@@ -58,7 +57,7 @@ namespace wpf_process_manager.Models
             {
                 this.PID = _process.Id;
                 this.Name = _process.ProcessName;
-                this.Command = GetStartCommand();
+                this.ThreadsCount = GetThreadsCount();
                 this.CPUUsage = GetCPUUsage();
                 this.MemoryUsage = GetMemoryUsage();
                 this.Priority = GetPriority();

@@ -35,7 +35,13 @@
             <Button DockPanel.Dock="Bottom" Command="{Binding FilterProcessesCommand}" Margin="0, 0, 5, 0">Apply filters</Button>
             <DataGrid AutoGenerateColumns="False" SelectedItem="{Binding SelectedProcess, Mode=TwoWay}" ItemsSource="{Binding Processes}" MaxHeight="250" Margin="0, 0, 0, 0" ScrollViewer.CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" >
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{Binding ThreadsCount}"></Setter>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="Process ID" Binding="{Binding PID}" />
                     <DataGridTextColumn Header="CPU Usage" Binding="{Binding CPUUsage}" />
                     <DataGridTextColumn Header="Memory" Binding="{Binding MemoryUsage}" />
