@@ -206,7 +206,12 @@ namespace wpf_process_manager.ViewModels
 
         private void SetPriority()
         {
-
+            var retval = _processManager.SetProcessPriority(SelectedProcess, SelectedProcessPriority);
+            if (retval)
+            {
+                Refresh();
+                SelectedProcess = null;
+            }
         }
     }
 }

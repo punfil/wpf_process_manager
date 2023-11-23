@@ -32,18 +32,23 @@ namespace wpf_process_manager.ProcessManager
             _refreshTimer = null;
         }
 
-        private Process[] GetRunningProcesses()
-        {
-            return Process.GetProcesses();
-
-        }
-
         public bool KillProcess(ProcessModel process)
         {
             if (process != null && !process.HasFinished())
             {
                 return process.Kill();
             }
+
+            return false;
+        }
+
+        public bool SetProcessPriority(ProcessModel process, ProcessPriorityModel priority)
+        {
+            if (process != null && !process.HasFinished() && priority != null)
+            {
+                return process.SetPriority(priority);
+            }
+
             return false;
         }
 

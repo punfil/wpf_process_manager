@@ -84,6 +84,20 @@ namespace wpf_process_manager.Models
             }
         }
 
+        public bool SetPriority(ProcessPriorityModel priorityModel)
+        {
+            try
+            {
+                _process.PriorityClass = priorityModel.Priority;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         private string GetMemoryUsage()
         {
             try
