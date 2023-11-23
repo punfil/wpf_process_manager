@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
@@ -83,6 +84,18 @@ namespace wpf_process_manager.ViewModels
             }
         }
 
+        private Dictionary<string, string> _selectedProcessDetails;
+
+        public Dictionary<string, string> SelectedProcessDetails
+        {
+            get => _selectedProcessDetails;
+            set
+            {
+                _selectedProcessDetails = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ProcessPriorityModel _selectedProcessPriority;
 
         public ProcessPriorityModel SelectedProcessPriority
@@ -103,6 +116,7 @@ namespace wpf_process_manager.ViewModels
             set
             {
                 _selectedProcess = value;
+                ShowDetails();
                 OnPropertyChanged();
             }
         }
@@ -172,6 +186,7 @@ namespace wpf_process_manager.ViewModels
         {
             Processes = new ObservableCollection<ProcessModel>(_processManager.Refresh());
             ClearFilters();
+            SelectedProcessDetails = null;
         }
 
         private void FilterProcesses()
@@ -186,6 +201,11 @@ namespace wpf_process_manager.ViewModels
             CpuUsageFilter = "";
             MemoryUsageFilter = "";
             PriorityFilter = "";
+        }
+
+        private void ShowDetails()
+        {
+            SelectedProcessDetails = _processManager.GetProcessDetails(SelectedProcess);
         }
 
         private void Kill()

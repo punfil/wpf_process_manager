@@ -49,6 +49,16 @@ namespace wpf_process_manager.ProcessManager
             return false;
         }
 
+        public Dictionary<string, string> GetProcessDetails(ProcessModel process)
+        {
+            if (process != null)
+            {
+                return process.GetDetails();
+            }
+
+            return null;
+        }
+
         static bool CompareWithPredicate(double value1, double value2, string predicate)
         {
             switch (predicate)

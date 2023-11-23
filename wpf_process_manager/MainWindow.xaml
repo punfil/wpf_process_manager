@@ -16,22 +16,41 @@
             <ComboBox DockPanel.Dock="Bottom" ItemsSource="{Binding ProcessPriorities}" SelectedItem="{Binding SelectedProcessPriority}" DisplayMemberPath="Name"/>
         </WrapPanel>
         <StackPanel Orientation="Vertical" Margin="10">
-            <WrapPanel Margin="0, 0, 0, 5">
-                <TextBlock Margin="0, 0, 5, 0">Filter by name:</TextBlock>
-                <TextBox MinWidth="150" Text="{Binding NameFilter}" />
-            </WrapPanel>
-            <WrapPanel Margin="0, 0, 0, 5">
-                <TextBlock Margin="0, 0, 5, 0">Filter by CPU usage:</TextBlock>
-                <TextBox MinWidth="150" Text="{Binding CpuUsageFilter}" />
-            </WrapPanel>
-            <WrapPanel Margin="0, 0, 0, 5">
-                <TextBlock Margin="0, 0, 5, 0">Filter by memory usage:</TextBlock>
-                <TextBox MinWidth="150" Text="{Binding MemoryUsageFilter}" />
-            </WrapPanel>
-            <WrapPanel>
-                <TextBlock Margin="0, 0, 5, 0">Filter by priority:</TextBlock>
-                <TextBox MinWidth="150" Text="{Binding PriorityFilter}" />
-            </WrapPanel>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical" Margin="0, 0, 0, 5">
+                    <WrapPanel Margin="0, 0, 0, 5">
+                        <TextBlock Margin="0, 0, 5, 0">Filter by name:</TextBlock>
+                        <TextBox MinWidth="150" Text="{Binding NameFilter}" />
+                    </WrapPanel>
+                    <WrapPanel Margin="0, 0, 0, 5">
+                        <TextBlock Margin="0, 0, 5, 0">Filter by CPU usage:</TextBlock>
+                        <TextBox MinWidth="150" Text="{Binding CpuUsageFilter}" />
+                    </WrapPanel>
+                    <WrapPanel Margin="0, 0, 0, 5">
+                        <TextBlock Margin="0, 0, 5, 0">Filter by memory usage:</TextBlock>
+                        <TextBox MinWidth="150" Text="{Binding MemoryUsageFilter}" />
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Margin="0, 0, 5, 0">Filter by priority:</TextBlock>
+                        <TextBox MinWidth="150" Text="{Binding PriorityFilter}" />
+                    </WrapPanel>
+                </StackPanel>
+                <ItemsControl Margin="10, 0, 0, 0" ItemsSource="{Binding SelectedProcessDetails}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Key}"/>
+                                <TextBlock Text="{Binding Value}" Grid.Column="1"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </StackPanel>
             <Button DockPanel.Dock="Bottom" Command="{Binding FilterProcessesCommand}" Margin="0, 0, 5, 0">Apply filters</Button>
             <DataGrid AutoGenerateColumns="False" SelectedItem="{Binding SelectedProcess, Mode=TwoWay}" ItemsSource="{Binding Processes}" MaxHeight="250" Margin="0, 0, 0, 0" ScrollViewer.CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <DataGrid.Columns>

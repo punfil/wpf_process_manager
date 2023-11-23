@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.ComponentModel;
@@ -35,6 +36,22 @@ namespace wpf_process_manager.Models
                 _process = null; // Only possible action
             }
         }
+
+        public Dictionary<string, string> GetDetails()
+        {
+            Dictionary<string, string> retDictionary = new Dictionary<string, string>();
+
+            retDictionary["Name: "] = Name;
+            retDictionary["CPU Usage: "] = CPUUsage;
+            retDictionary["Memory usage: "] = MemoryUsage;
+            retDictionary["Priority: "] = Priority;
+            retDictionary["Threads count: "] = ThreadsCount;
+            retDictionary["Parent process ID: "] = ParentID.ToString();
+            retDictionary["Handle count: "] = _process.HandleCount.ToString();
+
+            return retDictionary;
+        }
+
         public string GetCPUUsage()
         {
             try
