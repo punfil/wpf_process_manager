@@ -46,6 +46,7 @@
                     <DataGridTextColumn Header="CPU Usage" Binding="{Binding CPUUsage}" />
                     <DataGridTextColumn Header="Memory" Binding="{Binding MemoryUsage}" />
                     <DataGridTextColumn Header="Priority" Binding="{Binding Priority}" />
+                    <DataGridTextColumn Header="Parent ID" Binding="{Binding ParentID}" />
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>

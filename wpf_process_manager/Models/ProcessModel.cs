@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using wpf_process_manager.ProcessManager;
+using System.Management;
 
 namespace wpf_process_manager.Models
 {
@@ -19,11 +14,25 @@ namespace wpf_process_manager.Models
         public string MemoryUsage { get; set; }
         public string Priority { get; set; }
         public string ThreadsCount { get; set; }
+        public int ParentID { get; set; }
 
         public ProcessModel(Process process)
         {
             this._process = process;
-            UpdateDataFields();
+            try
+            {
+                this.PID = _process.Id;
+                this.Name = _process.ProcessName;
+                UpdateDataFields();
+                this.ParentID = GetParentProcessID();
+            }
+            catch (Exception ex)
+            {
+                // Do nothing, because what to do?
+                // Exception can only happen if the process finished (race condition) and we want to get data from it
+                // It will be auto deleted during next Refresh() in ProcessManager
+                _process = null; // Only possible action
+            }
         }
         public string GetCPUUsage()
         {
@@ -55,8 +64,6 @@ namespace wpf_process_manager.Models
         {
             try
             {
-                this.PID = _process.Id;
-                this.Name = _process.ProcessName;
                 this.ThreadsCount = GetThreadsCount();
                 this.CPUUsage = GetCPUUsage();
                 this.MemoryUsage = GetMemoryUsage();
@@ -137,5 +144,48 @@ namespace wpf_process_manager.Models
             Thread.Sleep(500);
             return true;
         }
+
+        private int GetParentProcessID()
+        {
+            try
+            {
+                return _process.Parent();
+            }
+            catch (Exception ex) // Denied
+            {
+                return 0;
+            }
+        }
+    }
+}
+public static class ProcessExtensions
+{
+    private static string FindIndexedProcessName(Process proc)
+    {
+        var processesByName = Process.GetProcessesByName(proc.ProcessName);
+        string processIndexedName = null;
+
+        for (var index = 0; index < processesByName.Length; index++)
+        {
+            processIndexedName = index == 0 ? proc.ProcessName : proc.ProcessName + "#" + index;
+            var processId = new PerformanceCounter("Process", "ID Process", processIndexedName);
+            if ((int)processId.NextValue() == proc.Id)
+            {
+                return processIndexedName;
+            }
+        }
+
+        return processIndexedName;
+    }
+
+    private static int FindPidFromIndexedProcessName(string indexedProcessName)
+    {
+        var parentId = new PerformanceCounter("Process", "Creating Process ID", indexedProcessName);
+        return (int)parentId.NextValue();
+    }
+
+    public static int Parent(this Process process)
+    {
+        return FindPidFromIndexedProcessName(FindIndexedProcessName(process));
     }
 }
