@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Management;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace wpf_process_manager.Models
 {
@@ -149,7 +151,7 @@ namespace wpf_process_manager.Models
         {
             try
             {
-                return _process.Parent();
+                return ParentProcessUtilities.GetParentProcess(_process.Handle);
             }
             catch (Exception ex) // Denied
             {
@@ -158,34 +160,35 @@ namespace wpf_process_manager.Models
         }
     }
 }
-public static class ProcessExtensions
+[StructLayout(LayoutKind.Sequential)]
+public struct ParentProcessUtilities
 {
-    private static string FindIndexedProcessName(Process proc)
-    {
-        var processesByName = Process.GetProcessesByName(proc.ProcessName);
-        string processIndexedName = null;
+    // These members must match PROCESS_BASIC_INFORMATION
+    internal IntPtr Reserved1;
+    internal IntPtr PebBaseAddress;
+    internal IntPtr Reserved2_0;
+    internal IntPtr Reserved2_1;
+    internal IntPtr UniqueProcessId;
+    internal IntPtr InheritedFromUniqueProcessId;
 
-        for (var index = 0; index < processesByName.Length; index++)
+    [DllImport("ntdll.dll")]
+    private static extern int NtQueryInformationProcess(IntPtr processHandle, int processInformationClass, ref ParentProcessUtilities processInformation, int processInformationLength, out int returnLength);
+
+    public static int GetParentProcess(IntPtr handle)
+    {
+        ParentProcessUtilities pbi = new ParentProcessUtilities();
+        int returnLength;
+        int status = NtQueryInformationProcess(handle, 0, ref pbi, Marshal.SizeOf(pbi), out returnLength);
+        if (status != 0)
+            throw new Win32Exception(status);
+
+        try
         {
-            processIndexedName = index == 0 ? proc.ProcessName : proc.ProcessName + "#" + index;
-            var processId = new PerformanceCounter("Process", "ID Process", processIndexedName);
-            if ((int)processId.NextValue() == proc.Id)
-            {
-                return processIndexedName;
-            }
+            return pbi.InheritedFromUniqueProcessId.ToInt32();
         }
-
-        return processIndexedName;
-    }
-
-    private static int FindPidFromIndexedProcessName(string indexedProcessName)
-    {
-        var parentId = new PerformanceCounter("Process", "Creating Process ID", indexedProcessName);
-        return (int)parentId.NextValue();
-    }
-
-    public static int Parent(this Process process)
-    {
-        return FindPidFromIndexedProcessName(FindIndexedProcessName(process));
+        catch (ArgumentException)
+        {
+            return 0;
+        }
     }
 }
