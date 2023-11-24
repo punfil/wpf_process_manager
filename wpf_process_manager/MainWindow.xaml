@@ -59,7 +59,7 @@
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" >
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="{Binding ThreadsCount}"></Setter>
+                                <Setter Property="ToolTip" Value="{Binding FilePath}"></Setter>
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>

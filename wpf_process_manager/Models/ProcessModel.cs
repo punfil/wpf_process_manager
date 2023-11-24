@@ -17,6 +17,7 @@ namespace wpf_process_manager.Models
         public string Priority { get; set; }
         public string ThreadsCount { get; set; }
         public int ParentID { get; set; }
+        public string FilePath { get; set; }
 
         public ProcessModel(Process process)
         {
@@ -27,6 +28,7 @@ namespace wpf_process_manager.Models
                 this.Name = _process.ProcessName;
                 UpdateDataFields();
                 this.ParentID = GetParentProcessID();
+                this.FilePath = GetFilePath();
             }
             catch (Exception ex)
             {
@@ -34,6 +36,18 @@ namespace wpf_process_manager.Models
                 // Exception can only happen if the process finished (race condition) and we want to get data from it
                 // It will be auto deleted during next Refresh() in ProcessManager
                 _process = null; // Only possible action
+            }
+        }
+
+        private string GetFilePath()
+        {
+            try
+            {
+                return _process.MainModule.FileName;
+            }
+            catch (Exception ex)
+            {
+                return "Unknown";
             }
         }
 
