@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:wpf_process_manager"
         mc:Ignorable="d"
         Title="184657 - Panfil Wojciech - Menedżer procesów" Height="450" Width="800">
     <DockPanel Margin="10">
@@ -39,14 +40,7 @@
                     <ItemsControl Margin="10, 0, 0, 0" ItemsSource="{Binding SelectedProcessDetails}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="{Binding Key}"/>
-                                    <TextBlock Text="{Binding Value}" Grid.Column="1"/>
-                                </Grid>
+                                <local:DetailsControl/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
