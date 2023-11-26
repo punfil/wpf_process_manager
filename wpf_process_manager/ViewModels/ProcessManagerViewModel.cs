@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
+using System.Windows;
 using wpf_process_manager.Models;
 using wpf_process_manager.ProcessManager;
 
@@ -148,6 +149,8 @@ namespace wpf_process_manager.ViewModels
                 {
                     Processes = new ObservableCollection<ProcessModel>(refreshReturn.processesList);
                     ClearFilters();
+                    SelectedProcessDetails = null;
+                    SelectedProcessDetailsThreads = null;
                 }
             };
             ProcessPriorities = new ObservableCollection<ProcessPriorityModel>();
@@ -233,6 +236,10 @@ namespace wpf_process_manager.ViewModels
                 Refresh();
                 SelectedProcess = null;
             }
+            else
+            {
+                MessageBox.Show($"Can't kill selected process", "Error",MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         private void AutoRefresh()
         {
@@ -246,6 +253,10 @@ namespace wpf_process_manager.ViewModels
             {
                 Refresh();
                 SelectedProcess = null;
+            }
+            else
+            {
+                MessageBox.Show($"Can't set priority of selected process", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
